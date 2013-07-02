@@ -2,6 +2,12 @@ import subprocess
 import os
 
 class PHPLint:
+    def __init__(self):
+        self.silent = False
+
+    def setSilentLint(self, isSilent):
+        self.silent = isSilent
+
     def lint(self, path):
         if os.path.isfile(path):
             self.lintFile(path)
@@ -10,8 +16,12 @@ class PHPLint:
 
     def lintFile(self, path):
         if self.isPHPFile(path):
-            returnCode = subprocess.call(['php', '-l', path], shell=False)
-            if returnCode > 0:
+            process = subprocess.Popen(['php', '-l', path], shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            (processStdOut, processStdErr) = process.communicate();
+            if not self.isSilentLint():
+                print processStdOut.rstrip()
+            if process.returncode > 0:
+                print processStdErr.rstrip()
                 raise SystemExit(1)
 
     def lintDir(self, path):
@@ -21,4 +31,7 @@ class PHPLint:
 
     def isPHPFile(self, filename):
         return filename.endswith('.php')
+
+    def isSilentLint(self):
+        return self.silent
 
