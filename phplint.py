@@ -1,12 +1,18 @@
 import subprocess
 import os
+import fnmatch
+import re
 
 class PHPLint:
     def __init__(self):
         self.silent = False
+        self.exclude_dir = []
 
     def set_silent_lint(self, is_silent):
         self.silent = is_silent
+
+    def set_exclude_dir(self, exclude_dir):
+        self.exclude_dir = exclude_dir
 
     def lint(self, path):
         if os.path.isfile(path):
@@ -26,7 +32,10 @@ class PHPLint:
                 raise SystemExit(1)
 
     def lint_dir(self, path):
-        for root_dir, dir_name, files in os.walk(path):
+        for root_dir, dirs, files in os.walk(path):
+            if self.exclude_dir.__len__() > 0:
+                excludes = r'|'.join([fnmatch.translate(x) for x in self.exclude_dir]) or r'$.'
+                dirs[:] = [d for d in dirs if not re.match(excludes, d)]
             for f in files:
                 self.lint_file(os.path.join(root_dir, f))
 

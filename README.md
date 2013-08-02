@@ -8,8 +8,3 @@ How to use?
 
 It is very straight foward, just clone this repo and make: python linter.py path/you/want/to/lint.
 You can use python linter.py --help to get list of options that are currently supported.
-
-Considerations
-==============
-
-Note that I'm not a Python programmer so, any help we'll be welcome!
