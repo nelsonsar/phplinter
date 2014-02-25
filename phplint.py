@@ -29,7 +29,6 @@ class PHPLint:
                 print process_stdout.rstrip()
             if process.returncode > 0:
                 print process_stderr.rstrip()
-                raise SystemExit(1)
 
     def lint_dir(self, path):
         for root_dir, dirs, files in os.walk(path):
